@@ -243,7 +243,12 @@ sim_results_df2 %>%
     power = mean(reject)
   ) %>% 
   ggplot(aes(x = mu, y = power)) +
-  geom_point()
+  geom_point() +
+  labs(
+    title = "The Association Between Effect Size and Power",
+    x = "True Mean",
+    y = "Power"
+  )
 ```
 
 According to the plot, as true value of μ increases, the proportion of times the null (μ=0) was rejected (the power of the test) is also increasing. It shows that effect size and power are positively associated.
