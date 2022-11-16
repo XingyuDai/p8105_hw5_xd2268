@@ -122,7 +122,7 @@ Pull the estimated proportion and confidence intervals from the resulting tidy d
 
 ```{r}
 Baltimore_test %>% 
-  select(estimate, conf.low, conf.high) %>% 
+  select(estimate, conf_low = conf.low, conf_high = conf.high) %>% 
   knitr::kable()
 ```
 
@@ -135,7 +135,7 @@ city_test = function(df) {
   
     prop.test(df[["unsolved"]], df[["total"]]) %>% 
     broom::tidy() %>% 
-    select(estimate, conf.low, conf.high)
+    select(estimate, conf_low = conf.low, conf_high = conf.high)
   
 }
 ```
@@ -165,7 +165,7 @@ test_outcome %>%
   ) %>% 
   ggplot(aes(x = city_state, y = estimate)) +
   geom_point() +
-  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  geom_errorbar(aes(ymin = conf_low, ymax = conf_high)) +
   theme(axis.text.x = element_text(
       angle = 90, vjust = 0.5, hjust = 1)) +
   labs(
@@ -204,14 +204,35 @@ sim_t_test = function(true_mean) {
 Set μ = 0. Generate 5000 datasets from the model x ∼ Normal[μ,σ].
 
 ```{r}
-sim_results_df = 
+sim_results_df1 = 
   expand_grid(
     mu = 0,
-    iteration = 1:5000
+    iteration = 1:50
   ) %>% 
   mutate(
     result = map(mu, sim_t_test)
   ) %>% 
-  unnest(result)
+  unnest(result) %>% 
+  rename(p_value = p.value)
+
+sim_results_df1
 ```
+
+Repeat the above for μ={1,2,3,4,5,6}:
+```{r}
+sim_results_df2 = 
+  expand_grid(
+    mu = 1:6,
+    iteration = 1:50
+  ) %>% 
+  mutate(
+    result = map(mu, sim_t_test)
+  ) %>% 
+  unnest(result) %>% 
+  rename(p_value = p.value)
+
+head(sim_results_df2)
+```
+
+
 
