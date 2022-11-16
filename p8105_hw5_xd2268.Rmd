@@ -179,8 +179,27 @@ According to this plot, Richmond has the lowest proportion of unsolved homicides
 
 
 ## Problem 3
+First set the following design elements:
 
+* Fix n=30
 
+* Fix σ=5
+
+Set μ = 0. Generate 5000 datasets from the model x ∼ Normal[μ,σ].
+
+For each dataset, save μ̂ and the p-value arising from a test of H:μ=0 using α=0.05.
+
+First write a function:
+
+```{r}
+sim_t_test = function(true_mean) {
+  sample = rnorm(30, mean = true_mean, sd = 5)
+  
+  t.test(sample) %>% 
+    broom::tidy() %>% 
+    select(estimate, p.value)
+}
+```
 
 
 
