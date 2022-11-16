@@ -197,7 +197,7 @@ sim_t_test = function(true_mean) {
   
   t.test(sample) %>% 
     broom::tidy() %>% 
-    select(estimate, p.value)
+    select(estimate, p_value = p.value)
 }
 ```
 
@@ -212,8 +212,7 @@ sim_results_df1 =
   mutate(
     result = map(mu, sim_t_test)
   ) %>% 
-  unnest(result) %>% 
-  rename(p_value = p.value)
+  unnest(result)
 
 sim_results_df1
 ```
@@ -228,11 +227,23 @@ sim_results_df2 =
   mutate(
     result = map(mu, sim_t_test)
   ) %>% 
-  unnest(result) %>% 
-  rename(p_value = p.value)
+  unnest(result) 
 
 head(sim_results_df2)
 ```
 
 
+* Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of μ on the x axis. Describe the association between effect size and power.
 
+```{r}
+sim_results_df2 %>% 
+  group_by(mu) %>% 
+  mutate(
+    reject = ifelse(p_value < 0.05, TRUE, FALSE),
+    power = mean(reject)
+  ) %>% 
+  ggplot(aes(x = mu, y = power)) +
+  geom_point()
+```
+
+According to the plot, as true value of μ increases, the proportion of times the null (μ=0) was rejected (the power of the test) is also increasing. It shows that effect size and power are positively associated.
