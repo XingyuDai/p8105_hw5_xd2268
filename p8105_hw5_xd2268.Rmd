@@ -1,7 +1,6 @@
 ---
 title: "P8105 Homework 5"
 output: github_document
-date: "`r format(Sys.time(), "%Y-%m-%d")`"
 ---
 
 ```{r setup, include=FALSE}
@@ -64,10 +63,21 @@ Finally, the code chunk below creates a plot showing individual data, faceted by
 
 ```{r}
 tidy_df %>% 
-  ggplot(aes(x = week, y = outcome, group = subj, color = group)) + 
+  ggplot(aes(x = week, y = outcome, group = subj, color = subj)) + 
   geom_point() + 
   geom_path() + 
   facet_grid(~group)
 ```
 
 This plot suggests high within-subject correlation -- subjects who start above average end up above average, and those that start below average end up below average. Subjects in the control group generally don't change over time, but those in the experiment group increase their outcome in a roughly linear way. 
+
+
+## Problem 2
+```{r}
+homicide_data = read_csv("./data/homicide_data.csv")
+```
+
+
+
+
+
