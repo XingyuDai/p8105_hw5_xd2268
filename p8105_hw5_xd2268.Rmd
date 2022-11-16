@@ -149,6 +149,10 @@ test_outcome =
   mutate(
     outcome = map(data, city_test)
   ) %>% 
-  unnest(data, outcome)
+  unnest(data, outcome) %>% 
+  select(-unsolved, -total)
+
+head(test_outcome) %>% 
+  knitr::kable()
 ```
 
