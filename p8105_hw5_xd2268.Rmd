@@ -75,9 +75,47 @@ This plot suggests high within-subject correlation -- subjects who start above a
 ## Problem 2
 ```{r}
 homicide_data = read_csv("./data/homicide_data.csv")
+
+homicide_data
+```
+
+This raw dataset contains `r nrow(homicide_data)` rows and `r ncol(homicide_data)` columns. Important variables include date, state, city, disposition, and information about victims such as race, age, sex, and names, etc. Each raw represents one single homicide case.
+
+Create a city_state variable (e.g. “Baltimore, MD”) and then summarize within cities to obtain the total number of homicides and the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).
+
+```{r}
+homicide = homicide_data %>% 
+  mutate(
+    city_state = str_c(city, ', ', state)
+  )
+
+total_num = homicide %>% 
+  group_by(city_state) %>% 
+  summarize(
+    total = n(),
+  )
+
+unsolved_num = homicide %>% 
+  filter(disposition %in% c("Closed without arrest", "Open/No arrest")) %>% 
+  group_by(city_state) %>% 
+  summarize(
+    unsolved = n()
+  )
+
+summary = inner_join(unsolved_num, total_num, by = "city_state")
 ```
 
 
+For the city of Baltimore, MD, use the prop.test function to estimate the proportion of homicides that are unsolved; save the output of prop.test as an R object, apply the broom::tidy to this object and pull the estimated proportion and confidence intervals from the resulting tidy dataframe.
 
 
+```{r}
+Baltimore_test = summary %>% 
+  filter(city_state == "Baltimore, MD")
+
+Baltimore_test =  
+  prop.test(Baltimore_test[["unsolved"]], Baltimore_test[["total"]]) %>% 
+  broom::tidy() %>% 
+  select(estimate, conf.low, conf.high)
+```
 
