@@ -149,10 +149,38 @@ test_outcome =
   mutate(
     outcome = map(data, city_test)
   ) %>% 
-  unnest(data, outcome) %>% 
-  select(-unsolved, -total)
+  unnest(outcome) %>% 
+  select(-data)
 
 head(test_outcome) %>% 
   knitr::kable()
 ```
+
+Create a plot that shows the estimates and CIs for each city – check out geom_errorbar for a way to add error bars based on the upper and lower limits. Organize cities according to the proportion of unsolved homicides.
+
+```{r}
+test_outcome %>% 
+  mutate(
+    city_state = fct_reorder(city_state, estimate)
+  ) %>% 
+  ggplot(aes(x = city_state, y = estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  theme(axis.text.x = element_text(
+      angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(
+    title = "Proportion of Unsolved Homicides for Each City",
+    x = "City",
+    y = "proportion"
+  )
+```
+
+According to this plot, Richmond has the lowest proportion of unsolved homicides, while Chicago has the highest.
+
+
+## Problem 3
+
+
+
+
 
