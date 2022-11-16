@@ -201,5 +201,17 @@ sim_t_test = function(true_mean) {
 }
 ```
 
+Set μ = 0. Generate 5000 datasets from the model x ∼ Normal[μ,σ].
 
+```{r}
+sim_results_df = 
+  expand_grid(
+    mu = 0,
+    iteration = 1:5000
+  ) %>% 
+  mutate(
+    result = map(mu, sim_t_test)
+  ) %>% 
+  unnest(result)
+```
 
