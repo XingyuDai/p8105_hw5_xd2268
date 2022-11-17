@@ -257,18 +257,31 @@ According to the plot, as true value of μ increases, the proportion of times th
 * Make a plot showing the average estimate of μ̂ on the y axis and the true value of μ on the x axis. Make a second plot (or overlay on the first) the average estimate of μ̂ only in samples for which the null was rejected on the y axis and the true value of μ on the x axis. Is the sample average of μ̂ across tests for which the null is rejected approximately equal to the true value of μ ? Why or why not?
 
 ```{r}
-plot_df %>% 
+avg_est = plot_df %>% 
   group_by(mu) %>%
   mutate(avg_mu_hat = mean(estimate)) %>% 
-  filter(reject == TRUE) %>% 
-  mutate(avg_mu_hat1 = mean(estimate)) %>% 
   ggplot(aes(x = mu, y = avg_mu_hat), color = "blue") +
   geom_point() +
-  geom_point(aes(x = mu, y = avg_mu_hat1), color = "pink") +
   labs(
-    title = "The Average Estimate of Mean for Each True Mean",
     x = "True Mean",
     y = "Average Estimate of Mean"
-  )
+  ) 
+
+rej_null = plot_df %>% 
+  group_by(mu) %>%
+  filter(reject == TRUE) %>% 
+  mutate(avg_mu_hat1 = mean(estimate)) %>% 
+  ggplot(aes(x = mu, y = avg_mu_hat1), color = "pink") +
+  geom_point() +
+  labs(
+    x = "True Mean",
+    y = "Average Estimate of Mean (with Null Rejected)"
+  ) 
+
+avg_est + rej_null
 ```
 
+theme(legend.title = element_text(family = "Roboto",
+                                    color = "blue", 
+                                    size = 10,
+                                    face = 2))
