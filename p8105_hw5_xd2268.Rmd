@@ -208,7 +208,7 @@ Set μ = 0. Generate 5000 datasets from the model x ∼ Normal[μ,σ].
 sim_results_df1 = 
   expand_grid(
     mu = 0,
-    iteration = 1:50
+    iteration = 1:5000
   ) %>% 
   mutate(
     result = map(mu, sim_t_test)
@@ -221,7 +221,7 @@ Repeat the above for μ={1,2,3,4,5,6}:
 sim_results_df2 = 
   expand_grid(
     mu = 1:6,
-    iteration = 1:50
+    iteration = 1:5000
   ) %>% 
   mutate(
     result = map(mu, sim_t_test)
@@ -281,7 +281,5 @@ rej_null = plot_df %>%
 avg_est + rej_null
 ```
 
-theme(legend.title = element_text(family = "Roboto",
-                                    color = "blue", 
-                                    size = 10,
-                                    face = 2))
+
+The sample average of μ̂ across tests for which the null is rejected is not equal to the true value of μ, especially for those whose true mean <= 4. They are above the true mean, in that rejecting the null means the effect size should be comparatively large. Therefore, tests from samples with larger estimated mean are more likely to reject the null.
